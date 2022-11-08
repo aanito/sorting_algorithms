@@ -1,91 +1,47 @@
 #include "sort.h"
-/**
- * insertion_sort_list - order a dll
- * @list: Double ll
- * Return: Nothing
- */
 
+/**
+ * swap - swap nodes
+ * @lhs: a pointer to the node before rhs
+ * @rhs: a pointer to the node after lhs
+ */
+void swap(listint_t *lhs, listint_t *rhs)
+{
+	if (rhs->next)
+		rhs->next->prev = lhs;
+	if (lhs->prev)
+		lhs->prev->next = rhs;
+	lhs->next = rhs->next;
+	rhs->next = lhs;
+	rhs->prev = lhs->prev;
+	lhs->prev = rhs;
+}
+
+/**
+ * insertion_sort_list - Perform the insertion sort alogorithm
+ * @list: a double pointer to the head of a list
+ */
 void insertion_sort_list(listint_t **list)
 {
-	listint_t *tmp = NULL, *tmp2 = NULL, *tmp3 = NULL;
+	listint_t *curr;
+	listint_t *next;
+	listint_t *prev;
 
-	if (list == NULL || *list == NULL || (*list)->next == NULL)
+	if (list && *list)
 	{
-		return;
-	}
-	tmp = *list;
-	while (tmp)
-	{
-		if (tmp->prev)
+		next = (*list)->next;
+		while ((curr = next))
 		{
-			if (tmp->prev->n > tmp->n)
+			next = curr->next;
+			prev = curr->prev;
+			while (prev && prev->n > curr->n)
 			{
-				tmp2 = tmp;
-				tmp3 = tmp;
-				swap(list, tmp->prev, tmp);
-				tmp = tmp->next;
+				swap(prev, curr);
+				prev = curr->prev;
+				if (!prev)
+					*list = curr;
 				print_list(*list);
-				while (tmp3)
-				{
-					if (tmp3->n > tmp2->n)
-					{
-						swap(list, tmp3, tmp2);
-						print_list(*list);
-					}
-					tmp3 = tmp3->prev;
-				}
 			}
 		}
-		tmp = tmp->next;
-	}
-
-}
-/**
- * swap - swap the nodes of the list
- * @list: Double ll
- * @node1: Node 1
- * @node2: Node 2
- * Return: Nothing
- */
-
-
-void swap(listint_t **list, listint_t *node1, listint_t *node2)
-{
-	listint_t *n1 = node1->prev;
-	listint_t *n2 = node2->next;
-
-	if (node1->prev == NULL  && node2->next == NULL)
-	{
-		node1->next = NULL;
-		node2->prev = NULL;
-		node1->prev = node2;
-		node2->next = node1;
-		*list = node2;
-	}
-	else if (node1->prev == NULL)
-	{
-		node1->next = n2;
-		node2->prev = NULL;
-		node1->prev = node2;
-		node2->next = node1;
-		n2->prev = node1;
-		*list = node2;
-	}
-	else if (node2->next == NULL)
-	{
-		node1->prev = node2;
-		node2->next = node1;
-		node2->prev = n1;
-		n1->next = node2;
-		node1->next = NULL;
-	}
-	else
-	{
-		node1->prev = node2;
-		node2->next = node1;
-		node1->next = n2;
-		node2->prev = n1;
-		n1->next = node2;
-		n2->prev = node1;
 	}
 }
